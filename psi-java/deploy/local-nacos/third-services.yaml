@@ -1,0 +1,28 @@
+sentinel:
+  dashboard: localhost:8718
+
+seata:
+  default: localhost:8091
+
+rocket-mq:
+  name-server: localhost:9876
+
+logstash:
+  host: localhost
+
+fastdfs:
+  charset: UTF-8
+  connect-timeout: 5
+  network-timeout: 30
+  http-secret-key: FastDFS1234567890
+  http-anti-steal-token: true
+  connection-pool-max-idle: 20
+  connection-pool-max-total: 20
+  connection-pool-min-idle: 2
+  nginx-servers: localhost:8888
+  tracker-servers: localhost:22122
+
+easy-es:
+  address: localhost:9200
+  username: elastic
+  password: changeme
