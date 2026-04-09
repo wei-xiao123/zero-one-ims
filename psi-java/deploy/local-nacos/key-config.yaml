@@ -1,0 +1,14 @@
+aliyun:
+  sms:
+    ak: replace-with-your-ak
+    sk: replace-with-your-sk
+
+spring:
+  mail:
+    host: smtp.163.com
+    port: 25
+    username: replace-with-your-email
+    password: replace-with-your-mail-password
+    properties:
+      from: replace-with-your-email
+      name: psi-local

@@ -1,0 +1,61 @@
+spring:
+  cloud:
+    inetutils:
+      preferred-networks:
+        - 192.168
+        - 10.
+      ignored-interfaces:
+        - docker0
+        - veth.*
+        - VM.*
+        - br-.*
+
+# Nacos settings used by multiple modules
+nacos:
+  addr: localhost:8848
+  contextPath: nacos
+  namespace: public
+
+# Service name mapping
+sn:
+  gateway: psi-gateway
+  login: psi-login
+  auth: psi-oauth2
+  doc: psi-doc
+  sample: psi-j1-homepage
+  cpp: psi-cpp-sample
+  homepage: psi-j1-homepage
+  sysconfig: psi-j1-sysconfig
+  store: psi-j2-storemanagement
+  purchase: psi-j3-purchase
+  capital: psi-j3-capital
+  sale: psi-sale
+  fund: psi-fund
+  reportmanagement: psi-j5-reportmanagement
+  basicinformation: psi-j6-basic-information
+  paymentorder: psi-j6-payment-order
+  moneytransfer: psi-j7-moneytransfer
+  supportinfo: psi-j7-supportinfo
+  finance: psi-j8-finance
+  report: psi-j8-report
+
+# Service port mapping
+sp:
+  gateway: 10081
+  login: 10200
+  auth: 10400
+  doc: 10600
+  homepage: 10700
+  sysconfig: 10800
+  store: 10900
+  purchase: 11000
+  capital: 11100
+  sale: 11200
+  fund: 11300
+  reportmanagement: 11400
+  basicinformation: 11500
+  paymentorder: 11600
+  moneytransfer: 11700
+  supportinfo: 11800
+  finance: 11900
+  report: 12000
