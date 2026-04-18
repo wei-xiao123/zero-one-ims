@@ -1,0 +1,15 @@
+services:
+  seata-server:
+    image: seataio/seata-server:1.5.1
+    container_name: seata-server
+    ports:
+      - "7091:7091"
+      - "8091:8091"
+    volumes:
+      - ./application.yml:/seata-server/resources/application.yml:ro
+      - ./lib/mysql-connector-java-8.0.30.jar:/seata-server/libs/mysql-connector-java-8.0.30.jar:ro
+    environment:
+      - TZ=Asia/Shanghai
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
