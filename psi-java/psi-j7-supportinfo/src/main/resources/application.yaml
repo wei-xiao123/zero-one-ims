@@ -1,0 +1,25 @@
+server:
+  port: ${sp.supportinfo}
+spring:
+  config:
+    import:
+      - "optional:nacos:system.yaml?group=DEFAULT_GROUP&refreshEnabled=true"
+      - "optional:nacos:data-source.yaml?group=DEFAULT_GROUP&refreshEnabled=true"
+      - "optional:nacos:third-services.yaml?group=DEFAULT_GROUP&refreshEnabled=true"
+      - "optional:nacos:key-config.yaml?group=DEFAULT_GROUP&refreshEnabled=true"
+  application:
+    name: ${sn.supportinfo}
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  cloud:
+    nacos:
+      server-addr: ${nacos.addr:127.0.0.1:8848}
+      config:
+        server-addr: ${nacos.addr:127.0.0.1:8848}
+      discovery:
+        ip: 127.0.0.1
+        port: 18501
+fastdfs:
+  tracker-servers: localhost:22122
+  nginx-servers: localhost:8888
