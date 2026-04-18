@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.zeroone.star</groupId>
+        <artifactId>psi-java</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>psi-j8-finance</artifactId>
+    <dependencies>
+        <!-- spring mvc -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-spring-boot-starter</artifactId>
+        </dependency>
+        <!-- common -->
+        <dependency>
+            <groupId>com.zeroone.star</groupId>
+            <artifactId>psi-common</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.xiaoymin</groupId>
+                    <artifactId>knife4j-spring-boot-starter</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.zeroone.star</groupId>
+            <artifactId>psi-domain</artifactId>
+        </dependency>
+        <!-- apis -->
+        <dependency>
+            <groupId>com.zeroone.star</groupId>
+            <artifactId>psi-apis</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.xiaoymin</groupId>
+                    <artifactId>knife4j-spring-boot-starter</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- alibaba nacos discovery -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <!-- alibaba nacos config -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+        <!-- mp -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
+        <!-- druid -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+        </dependency>
+        <!-- mysql driver -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <!-- fastjson -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+        <!-- easy pdf -->
+        <dependency>
+            <groupId>org.dromara.x-easypdf</groupId>
+            <artifactId>x-easypdf-fop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>0.2.0</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    
+                    <dockerHost>http://127.0.0.1:2375</dockerHost>
+                    
+                    <certPath>E:\\docker\\certs</certPath>
+                    <images>
+                        <image>
+                            
+                            <name>z01star/${project.artifactId}:${project.version}</name>
+                            
+                            <build>
+                                <contextDir>${project.basedir}</contextDir>
+                            </build>
+                            
+                            <alias>${project.artifactId}</alias>
+                            
+                            <run>
+                                
+                                <namingStrategy>alias</namingStrategy>
+                                
+                                <ports>
+                                    <port>9888:9888</port>
+                                </ports>
+                                
+                                <volumes>
+                                    <bind>
+                                        <volume>/etc/localtime:/etc/localtime</volume>
+                                    </bind>
+                                    <bind>
+                                        <volume>/home/app/${project.artifactId}/logs:/tmp/logs</volume>
+                                    </bind>
+                                </volumes>
+                                
+                                <env>
+                                    
+                                    <JAVA_OPTS>-Xms256m -Xmx256m</JAVA_OPTS>
+                                    
+                                    <SPRING_ARGS>
+                                        --spring.profiles.active=test
+                                        --spring.cloud.nacos.discovery.ip=127.0.0.1
+                                    </SPRING_ARGS>
+                                </env>
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.zeroone.star.finance.FinanceApplication</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.zeroone.star</groupId>
+                <artifactId>mp-code-generator-plugin</artifactId>
+                <configuration>
+                    
+                    <dbConfig>
+                        
+                        <host>localhost</host>
+                        
+                        <port>3306</port>
+                        
+                        <dbname>zo_psi</dbname>
+                        
+                        <username>root</username>
+                        
+                        <password>hj0087</password>
+                    </dbConfig>
+                    
+                    <outDir>${project.basedir}/src/main/java</outDir>
+                    <pkgName>com.zeroone.star</pkgName>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+

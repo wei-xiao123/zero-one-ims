@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.zeroone.star</groupId>
+        <artifactId>psi-java</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>psi-gateway</artifactId>
+
+    <dependencies>
+        <!-- alibaba nacos discovery -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <!-- alibaba nacos config -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+        <!-- zo gateway cloud starter -->
+        <dependency>
+            <groupId>com.zeroone.star</groupId>
+            <artifactId>zero-one-cloud-starter-gateway</artifactId>
+        </dependency>
+        <!-- redis starter -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <!-- common -->
+        <dependency>
+            <groupId>com.zeroone.star</groupId>
+            <artifactId>psi-common</artifactId>
+            <exclusions>
+                <!-- Gateway 不支持 Springfox/Knife4j -->
+                <exclusion>
+                    <groupId>com.github.xiaoymin</groupId>
+                    <artifactId>knife4j-spring-boot-starter</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.springfox</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- domain -->
+        <dependency>
+            <groupId>com.zeroone.star</groupId>
+            <artifactId>psi-domain</artifactId>
+            <exclusions>
+                <!-- Gateway 不支持 Springfox/Knife4j -->
+                <exclusion>
+                    <groupId>com.github.xiaoymin</groupId>
+                    <artifactId>knife4j-spring-boot-starter</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.springfox</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.zeroone.star.gateway.GatewayApplication</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    
+                    <dockerHost>http://127.0.0.1:2375</dockerHost>
+                    
+                    <certPath>E:\\docker\\certs</certPath>
+                    
+                    <images>
+                        <image>
+                            
+                            <name>01star/${project.artifactId}:${project.version}</name>
+                            
+                            <build>
+                                <contextDir>${project.basedir}</contextDir>
+                            </build>
+                            
+                            <alias>${project.artifactId}</alias>
+                            
+                            <run>
+                                
+                                <namingStrategy>alias</namingStrategy>
+                                
+                                <ports>
+                                    <port>10001:10001</port>
+                                </ports>
+                                
+                                <volumes>
+                                    <bind>
+                                        <volume>/etc/localtime:/etc/localtime</volume>
+                                        <volume>/home/app/${project.artifactId}/logs:/tmp/logs</volume>
+                                    </bind>
+                                </volumes>
+                                
+                                <env>
+                                    
+                                    <JAVA_OPTS>-Xms256m -Xmx256m</JAVA_OPTS>
+                                    
+                                    <SPRING_ARGS>
+                                        --spring.profiles.active=test --spring.cloud.nacos.discovery.ip=127.0.0.1
+                                    </SPRING_ARGS>
+                                </env>
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+
