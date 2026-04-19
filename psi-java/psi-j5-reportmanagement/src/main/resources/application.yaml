@@ -1,0 +1,30 @@
+server:
+  port: ${sp.reportmanagement}
+spring:
+  config:
+    import:
+      - "optional:nacos:system.yaml?group=DEFAULT_GROUP&refreshEnabled=true"
+      - "optional:nacos:data-source.yaml?group=DEFAULT_GROUP&refreshEnabled=true"
+      - "optional:nacos:third-services.yaml?group=DEFAULT_GROUP&refreshEnabled=true"
+      - "optional:nacos:key-config.yaml?group=DEFAULT_GROUP&refreshEnabled=true"
+  cloud:
+    nacos:
+      server-addr: ${nacos.addr:127.0.0.1:8848}
+      config:
+        server-addr: ${nacos.addr:127.0.0.1:8848}
+  application:
+    name: ${sn.reportmanagement}
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  type-aliases-package: com.zeroone.star.reportmanagement.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  level:
+    com.zeroone.star.patrolmgt.mapper: debug
