@@ -130,7 +130,7 @@ export class CustomerAPI {
       });
       
       // 直接传递参数对象，而不是嵌套在params对象中
-      const response = await this.http.get('/c2-sysbase/cus/queryall', validParams);
+      const response = await this.http.get('/basic_information/customer/query-all', validParams);
       
       // 安全检查响应数据格式
       if (!response || typeof response !== 'object') {
@@ -259,7 +259,7 @@ export class CustomerAPI {
       
       // 安全的路径构建，防止注入
       const safeId = encodeURIComponent(id.trim());
-      const response = await this.http.get(`/c2-sysbase/cus/get/${safeId}`);
+      const response = await this.http.get('/basic_information/customer/query-one', { id: safeId });
       
       // 安全检查响应数据
       if (!response || typeof response !== 'object') {
@@ -376,7 +376,7 @@ export class CustomerAPI {
       console.log('发送给后端的数据:', backendRequestData);
       
       // 直接发送严格按照后端要求构建的数据
-      const response = await this.http.post('/c2-sysbase/cus/add', backendRequestData);
+      const response = await this.http.post('/basic_information/customer/add-customer', backendRequestData);
       
       // 安全处理响应，特别处理null响应的情况（后端C++可能返回null）
       if (response.data === null || response.data === undefined) {
@@ -459,7 +459,7 @@ export class CustomerAPI {
         throw new Error('没有可更新的字段');
       }
       
-      const response = await this.http.put('/c2-sysbase/cus/modify', updateData);
+      const response = await this.http.put('/basic_information/customer/update-customer', updateData);
       
       // 安全处理响应
       if (!response || typeof response !== 'object') {
@@ -513,8 +513,8 @@ export class CustomerAPI {
       const safeId = id.trim();
       
       // API需要数组格式的请求体，确保数组结构正确
-      const response = await this.http.delete('/c2-sysbase/cus/delete', { 
-        data: [safeId] 
+      const response = await this.http.delete('/basic_information/customer/delete-customer-list', [safeId], {
+        upType: 0
       });
       
       // 安全处理响应
@@ -573,8 +573,8 @@ export class CustomerAPI {
       }
       
       // API需要数组格式的请求体
-      const response = await this.http.delete('/c2-sysbase/cus/delete', { 
-        data: safeIds 
+      const response = await this.http.delete('/basic_information/customer/delete-customer-list', safeIds, {
+        upType: 0
       });
       
       // 安全处理响应

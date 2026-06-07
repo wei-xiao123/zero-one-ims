@@ -276,7 +276,7 @@ export class ProductAPI {
       formattedQuery.pageIndex = Number(query.pageIndex);
       
       // 使用直接传递参数的方式，让http.ts中的paramsSerializer处理序列化
-      const response = await this.http.get('/c2-sysbase/goods/all', formattedQuery);
+      const response = await this.http.get('/goods/query-list', formattedQuery);
       return response as ApiResponse<PageResult<Product>>;
     } catch (error) {
       console.error('获取商品列表失败:', error);
@@ -364,7 +364,7 @@ export class ProductAPI {
    */
   static async getProductDetail(id: string): Promise<ApiResponse<Product>> {
     try {
-      const response = await this.http.get('/c2-sysbase/goods/getdetail', { params: { id } });
+      const response = await this.http.get('/goods/query-detail', { id });
       return response as ApiResponse<Product>;
     } catch (error) {
       console.error('获取商品详情失败:', error);
@@ -422,7 +422,7 @@ export class ProductAPI {
     try {
       // 使用工具函数格式化商品数据
       const formattedData = formatProductData(data);
-      const response = await this.http.post('/c2-sysbase/goods/add', formattedData);
+      const response = await this.http.post('/goods/add', formattedData);
       return response as ApiResponse<string>;
     } catch (error) {
       console.error('新增商品失败:', error);
@@ -446,7 +446,7 @@ export class ProductAPI {
     try {
       // 使用工具函数格式化商品数据
       const formattedData = formatProductData(data);
-      const response = await this.http.put('/c2-sysbase/goods/update', formattedData);
+      const response = await this.http.put('/goods/update', formattedData);
       return response as ApiResponse<string>;
     } catch (error) {
       console.error('更新商品失败:', error);
@@ -470,7 +470,9 @@ export class ProductAPI {
     try {
       // 确保ids是数组格式
       const deleteIds = Array.isArray(ids) ? ids : [ids];
-      const response = await this.http.delete('/c2-sysbase/goods/delete', { data: deleteIds });
+      const response = await this.http.delete('/goods/remove', deleteIds, {
+        upType: 0
+      });
       return response as ApiResponse<string>;
     } catch (error) {
       console.error('删除商品失败:', error);
@@ -491,7 +493,10 @@ export class ProductAPI {
    */
   static async getProductSpecs(): Promise<ApiResponse<Array<{id: string; name: string; number: string}>>> {
     try {
-      const response = await this.http.get('/c2-sysbase/goods/specs');
+      const response = await this.http.get('/goods/select-list', {
+        pageIndex: 1,
+        pageSize: 999
+      });
       return response as ApiResponse<Array<{id: string; name: string; number: string}>>;
     } catch (error) {
       console.error('获取商品选择列表失败:', error);
@@ -656,10 +661,13 @@ export class ProductAPI {
    */
   static async exportProducts(query: ProductQuery): Promise<Blob> {
     try {
-      const response = await this.http.get('/c2-sysbase/goods/export', {
-        params: query,
-        responseType: 'blob'
-      });
+      const response = await this.http.post(
+        '/goods/export',
+        query,
+        {
+          responseType: 'blob'
+        }
+      );
       return response as unknown as Blob;
     } catch (error) {
       console.error('导出数据失败:', error);

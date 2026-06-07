@@ -113,7 +113,7 @@ export class SupplierAPI {
         }
       
         // 直接传递过滤后的参数对象，确保与C++后端兼容
-        const result = await this.http.get('/c2-sysbase/sup/queryall', filteredQuery)
+        const result = await this.http.get('/basic_information/supplier/querySupplierList', filteredQuery)
         
         // 确保响应格式一致性，防止Map_base::at错误
         if (result && result.code === 10000 && result.data) {
@@ -151,7 +151,7 @@ export class SupplierAPI {
    */
   static async getSupplierDetail(id: string): Promise<ApiResponse<Supplier>> {
     try {
-      const result = await this.http.get('/c2-sysbase/sup/detail', { params: { id } })
+      const result = await this.http.get('/basic_information/supplier/query-one', { id })
       return result as ApiResponse<Supplier>
     } catch (error) {
       // 记录错误信息，便于调试
@@ -190,7 +190,7 @@ export class SupplierAPI {
       }
       
       // 直接传递符合后端要求的参数对象
-      const result = await this.http.post('/c2-sysbase/sup/add', filteredParams)
+      const result = await this.http.post('/basic_information/supplier/add', filteredParams)
       return result as ApiResponse<string>
     } catch (error) {
       console.error('添加供应商失败:', error)
@@ -232,7 +232,7 @@ export class SupplierAPI {
       }
       
       // 直接传递符合后端要求的参数对象
-      const result = await this.http.put('/c2-sysbase/sup/update', filteredParams)
+      const result = await this.http.put('/basic_information/supplier/update', filteredParams)
       return result as ApiResponse<string>
     } catch (error) {
       console.error('更新供应商失败:', error)
@@ -253,7 +253,9 @@ export class SupplierAPI {
    */
   static async deleteSupplier(ids: string[]): Promise<ApiResponse<string>> {
     try {
-      const result = await this.http.delete('/c2-sysbase/sup/delete', { ids })
+      const result = await this.http.delete('/basic_information/supplier/delete', ids, {
+        upType: 0
+      })
       return result as ApiResponse<string>
     } catch (error) {
       console.error('删除供应商失败:', error)
@@ -284,7 +286,7 @@ export class SupplierAPI {
    */
   static async importSupplier(formData: FormData): Promise<ApiResponse<any>> {
     try {
-      const result = await this.http.post('/c2-sysbase/sup/import', formData)
+      const result = await this.http.post('/basic_information/supplier/import', formData)
       return result as ApiResponse<any>
     } catch (error) {
       console.error('导入供应商失败:', error)
@@ -306,7 +308,7 @@ export class SupplierAPI {
   static async exportSupplier(params?: SupplierExportQuery): Promise<any> {
     try {
       // 使用getFile方法处理文件流响应
-      return await this.http.getFile('/c2-sysbase/sup/export', params)
+      return await this.http.getFile('/basic_information/supplier/export', params)
     } catch (error) {
       console.error('导出供应商失败:', error)
       throw error
