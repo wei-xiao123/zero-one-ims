@@ -59,3 +59,11 @@ sp:
   supportinfo: 11800
   finance: 11900
   report: 12000
+
+# Local development switches
+zo:
+  captcha:
+    enabled: false
+  local-auth:
+    enabled: true
+    keystore-path: psi-oauth2/src/main/resources/jwt.jks

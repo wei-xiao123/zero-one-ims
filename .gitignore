@@ -20,6 +20,14 @@
 hs_err_pid*
 replay_pid*
 
+# Local agent/tool settings
+.claude/
+
+# Local Docker runtime state
+psi-java/deploy/middleware/**/data/
+psi-java/deploy/middleware/**/logs/
+psi-java/deploy/middleware/jenkins/jenkins/
+
 # IDE and OS files
 .vscode/
 .mtj.tmp/

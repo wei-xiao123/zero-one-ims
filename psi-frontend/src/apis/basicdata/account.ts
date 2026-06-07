@@ -75,7 +75,7 @@ export class AccountAPI {
       }
       
       // GET请求直接传递参数，不需要嵌套在params中
-      const response = await this.http.get('/c2-sysbase/funds/get', queryParams)
+      const response = await this.http.get('/account/list', queryParams)
       
       // 验证响应的有效性
       if (response === null || response === undefined) {
@@ -104,7 +104,7 @@ export class AccountAPI {
       }
       
       // GET请求直接传递id参数，不需要嵌套在params中
-      const response = await this.http.get('/c2-sysbase/funds/query-fund-detail', { id: validId })
+      const response = await this.http.get('/account/get', { id: validId })
       
       // 验证响应的有效性
       if (response === null || response === undefined) {
@@ -138,7 +138,9 @@ export class AccountAPI {
       }
       
       // POST请求直接传递数据，不需要嵌套
-      const response = await this.http.post('/c2-sysbase/funds/add-account', accountData)
+      const response = await this.http.post('/account/add', accountData, {
+        upType: 0
+      })
       
       // 验证响应的有效性
       if (response === null || response === undefined) {
@@ -179,7 +181,9 @@ export class AccountAPI {
       }
       
       // PUT请求直接传递数据
-      const response = await this.http.put('/c2-sysbase/funds/update-account', updateData)
+      const response = await this.http.put('/account/update', updateData, {
+        upType: 0
+      })
       
       // 验证响应的有效性
       if (response === null || response === undefined) {
@@ -208,7 +212,10 @@ export class AccountAPI {
       }
       
       // DELETE请求直接传递id参数，不需要嵌套在params中
-      const response = await this.http.delete('/c2-sysbase/funds/delete', { id: validId })
+      const response = await this.http.delete('/account/delete', null, {
+        params: { id: validId },
+        upType: 0
+      })
       
       // 验证响应的有效性
       if (response === null || response === undefined) {
@@ -237,14 +244,16 @@ export class AccountAPI {
       }
       
       // 批量删除使用delete方法，直接传递ids数组
-      const response = await this.http.delete('/c2-sysbase/funds/batch-delete', { ids: validIds })
-      
-      // 验证响应的有效性
-      if (response === null || response === undefined) {
-        throw new Error('批量删除资金账户：响应为空')
-      }
-      
-      return response
+      const responses = await Promise.all(
+        validIds.map((id) =>
+          this.http.delete('/account/delete', null, {
+            params: { id },
+            upType: 0
+          })
+        )
+      )
+
+      return responses[responses.length - 1]
     } catch (error) {
       console.error('批量删除资金账户失败:', error)
       // 包装错误，提供更详细的信息

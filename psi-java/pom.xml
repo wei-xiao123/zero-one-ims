@@ -72,20 +72,20 @@
         <module>psi-gateway</module>
         <module>psi-login</module>
         <module>psi-doc</module>
-        <module>psi-j1-homepage</module>
-        <module>psi-j1-sysconfig</module>
-        <module>psi-j2-storemanagement</module>
+        <module>psi-homepage</module>
+        <module>psi-sysconfig</module>
+        <module>psi-storemanagement</module>
         <module>psi-sale</module>
         <module>psi-fund</module>
-        <module>psi-j5-reportmanagement</module>
-        <module>psi-j6-basic_Information</module>
-        <module>psi-j6-payment_order</module>
-        <module>psi-j7-supportinfo</module>
-        <module>psi-j7-moneytransfer</module>
-        <module>psi-j8-finance</module>
-        <module>psi-j8-report</module>
-        <module>psi-j3-purchase</module>
-        <module>psi-j3-capital</module>
+        <module>psi-reportmanagement</module>
+        <module>psi-basic-information</module>
+        <module>psi-payment-order</module>
+        <module>psi-supportinfo</module>
+        <module>psi-moneytransfer</module>
+        <module>psi-finance</module>
+        <module>psi-report</module>
+        <module>psi-purchase</module>
+        <module>psi-capital</module>
     </modules>
 
     <dependencyManagement>

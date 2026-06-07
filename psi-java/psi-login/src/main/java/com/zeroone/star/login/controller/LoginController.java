@@ -10,6 +10,7 @@ import com.zeroone.star.login.service.IMenuService;
 import com.zeroone.star.login.service.OauthService;
 import com.zeroone.star.login.service.SmsService;
 import com.zeroone.star.login.service.impl.CaptchaBusinessService;
+import com.zeroone.star.login.service.impl.LocalDevAuthService;
 import com.zeroone.star.project.components.sms.aliyun.SmsResult;
 import com.zeroone.star.project.components.jwt.JwtComponent;
 import com.zeroone.star.project.components.jwt.exception.JwtExpiredException;
@@ -65,6 +66,8 @@ public class LoginController implements LoginApis {
     String clientId;
     @Value("${zo.cloud.starter.oauth2.mgr-password}")
     String clientPassword;
+    @Value("${zo.local-auth.enabled:true}")
+    Boolean localAuthEnabled;
     @Value("${zo.captcha.enabled:true}")
     Boolean captchaEnabled;
 //    @Resource
@@ -74,6 +77,8 @@ public class LoginController implements LoginApis {
 
     @Autowired
     private JwtComponent jwtComponent;
+    @Resource
+    private LocalDevAuthService localDevAuthService;
 
 
     @ApiOperation(value = "授权登录")
@@ -107,6 +112,22 @@ public class LoginController implements LoginApis {
         Oauth2Token oauth2Token = oAuthService.postAccessToken(params);
 
         // 认证失败
+        if (oauth2Token.getErrorMsg() != null) {
+            if (Boolean.TRUE.equals(localAuthEnabled)) {
+                try {
+                    oauth2Token = localDevAuthService.localLogin(
+                            loginDTO.getUsername(),
+                            loginDTO.getPassword(),
+                            clientId
+                    );
+                } catch (Exception e) {
+                    return JsonVO.create(null, ResultStatus.FAIL.getCode(), e.getMessage());
+                }
+            } else {
+                return JsonVO.create(null, ResultStatus.FAIL.getCode(), oauth2Token.getErrorMsg());
+            }
+        }
+
         if (oauth2Token.getErrorMsg() != null) {
             return JsonVO.create(null, ResultStatus.FAIL.getCode(), oauth2Token.getErrorMsg());
         }

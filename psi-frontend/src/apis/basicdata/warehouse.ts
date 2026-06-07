@@ -325,7 +325,7 @@ export class WarehouseAPI {
    */
   static async getWarehouseNameList(): Promise<ApiResponse<Array<{ id: string; name: string }>>> {
     try {
-      const result = await this.http.get('/c2-sysbase/ware/getname')
+      const result = await this.http.get('/basic_information/warehouse/getWarehouseNameList')
 
       // 添加响应类型检查，确保返回数据结构正确
       if (!result || typeof result !== 'object' || !('code' in result)) {

@@ -21,6 +21,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyFactory;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -180,13 +185,23 @@ public class JwtComponent {
     private JWSVerifier getDefaultJwsVerifier() {
         try {
             // 读取公钥内容
-            String publicKeyStr = StreamUtils.copyToString(publicPem.getInputStream(), Charset.defaultCharset());
-            RSAKey rsaPublicKey = (RSAKey) JWK.parseFromPEMEncodedObjects(publicKeyStr);
+            String publicKeyStr = StreamUtils.copyToString(publicPem.getInputStream(), StandardCharsets.UTF_8);
+            RSAPublicKey rsaPublicKey = parsePublicKey(publicKeyStr);
             return new RSASSAVerifier(rsaPublicKey);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private RSAPublicKey parsePublicKey(String pem) throws Exception {
+        String content = pem
+                .replace("-----BEGIN PUBLIC KEY-----", "")
+                .replace("-----END PUBLIC KEY-----", "")
+                .replaceAll("\\s", "");
+        byte[] keyBytes = Base64.getDecoder().decode(content);
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
+        return (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(keySpec);
     }
 
     /**
